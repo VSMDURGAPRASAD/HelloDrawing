@@ -10,16 +10,18 @@ import UIKit
 
 class MyView: UIView {
     
-    var points:[CGPoint] = []
+    var lines:[[CGPoint]] = []
+    var colors:[UIColor] = []
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         let touch = touches.first
-        points.append((touch?.location(in:self))!)
+        lines.append([(touch?.location(in:self))!])
+        colors.append(UIColor(displayP3Red: CGFloat.random(in:0 ... 1.0), green: CGFloat.random(in:0 ... 1.0), blue: CGFloat.random(in:0 ... 1.0), alpha: 1.0))
         print("Began: \(String(describing: touch?.location(in: self))))")
     }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first
-        points.append((touch?.location(in:self))!)
+        lines[lines.count-1].append((touch?.location(in:self))!)
         setNeedsDisplay()
         print("Moved: \(String(describing: touch?.location(in: self))))")
     }
@@ -27,7 +29,7 @@ class MyView: UIView {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first
-        points.append((touch?.location(in:self))!)
+        lines[lines.count-1].append((touch?.location(in:self))!)
         print("Ended: \(String(describing: touch?.location(in: self))))")
     }
     
@@ -49,17 +51,22 @@ class MyView: UIView {
 //        UIColor.blue.setFill()
 //        path.stroke()
 //        path.fill()
-        if points.count == 0 {
+        if lines.count == 0 {
             return
         }
+        for i in 0..<lines.count{
+            
+        
         let path = UIBezierPath()
-        path.move(to: points[0])
-        for pt in points {
+        path.move(to: lines [i][0])
+        for pt in lines[i] {
             path.addLine(to:pt)
         }
-        UIColor .red.setStroke()
+            colors[i].setStroke()
+        //UIColor .red.setStroke()
         path.lineWidth = 8.0
         path.stroke()
+    }
     }
  
 
